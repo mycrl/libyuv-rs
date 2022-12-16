@@ -18,19 +18,13 @@ fn split(path: &Path) -> (String, String) {
     )
 }
 
-fn get_lib_name(debug: bool, key: &str, long: bool) -> String {
+fn get_lib_name(key: &str, long: bool) -> String {
     let arch = env::var("CARGO_CFG_TARGET_ARCH").unwrap();
     let os = env::var("CARGO_CFG_TARGET_OS").unwrap();
 
     let ext = if cfg!(windows) { "lib" } else { "a" };
     let flag = if cfg!(windows) { "" } else { "lib" };
-    let kind = if cfg!(windows) || !debug {
-        "release"
-    } else {
-        "debug"
-    };
-
-    let name = format!("{}-{}-{}-{}", key, os, arch, kind);
+    let name = format!("{}-{}-{}", key, os, arch);
     if long {
         format!("{}{}.{}", flag, name, ext)
     } else {
@@ -38,12 +32,12 @@ fn get_lib_name(debug: bool, key: &str, long: bool) -> String {
     }
 }
 
-fn download(debug: bool, name: &str) -> (String, String) {
+fn download(name: &str) -> (String, String) {
     let repository = env::var("CARGO_PKG_REPOSITORY").unwrap();
     let version = env::var("CARGO_PKG_VERSION").unwrap();
     let output = env::var("OUT_DIR").unwrap();
 
-    let lib_name = get_lib_name(debug, name, true);
+    let lib_name = get_lib_name(name, true);
     let path = join(&output, &lib_name);
     if !path.exists() {
         Command::new("curl")
@@ -76,7 +70,7 @@ fn main() {
     
     let (yuv_lib_path, yuv_lib_name) = env::var("YUV_LIBRARY_PATH")
         .map(|path| split(Path::new(&path)))
-        .unwrap_or_else(|_| download(debug, "yuv"));
+        .unwrap_or_else(|_| download("yuv"));
     
     println!("cargo:rustc-link-lib={}", yuv_lib_name);
     println!("cargo:rustc-link-search=all={}", yuv_lib_path);
