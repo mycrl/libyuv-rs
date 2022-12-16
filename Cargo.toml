@@ -2,6 +2,22 @@
 name = "libyuv"
 version = "0.1.0"
 edition = "2021"
+authors = [ "Mr.Panda <xivistudios@gmail.com>" ]
+description = "Raw FFI bindings to libyuv libraries."
+readme = "./README.md"
+homepage = "https://github.com/colourful-rtc/libyuv-rs"
+repository = "https://github.com/colourful-rtc/libyuv-rs"
+license = "GPL-2.0-or-later"
+keywords = [
+    "libyuv",
+    "ffi"
+]
+
+categories = [
+    "multimedia",
+    "api-bindings",
+    "computer-vision"
+]
 
 [dependencies]
 libc = "0.2.121"
