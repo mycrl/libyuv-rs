@@ -226,7 +226,7 @@ cmake --build .
 ```bash
 mkdir out
 cd out
-cmake -DCMAKE_INSTALL_PREFIX="/usr/lib" -DCMAKE_BUILD_TYPE="Release" ..
+cmake -DCMAKE_BUILD_TYPE="Release" ..
 cmake --build . --config Release
 ```
 
