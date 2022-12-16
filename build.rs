@@ -56,10 +56,7 @@ fn download(name: &str) -> (String, String) {
 }
 
 fn main() {
-    let debug = env::var("DEBUG")
-        .map(|label| label == "true")
-        .unwrap_or(true);
-    enver::init(debug).unwrap();
+    dotenv::dotenv().ok();
 
     for name in ["YUV_LIBRARY_PATH"] {
         println!("cargo:cargo:rerun-if-env-changed={}", name);

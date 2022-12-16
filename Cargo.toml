@@ -6,5 +6,5 @@ edition = "2021"
 [dependencies]
 libc = "0.2.121"
 
-[build-dependencies.enver]
-path = "../enver"
+[build-dependencies]
+dotenv = "0.15.0"
