@@ -56,8 +56,6 @@ fn download(name: &str) -> (String, String) {
 }
 
 fn main() {
-    dotenv::dotenv().ok();
-
     for name in ["YUV_LIBRARY_PATH"] {
         println!("cargo:cargo:rerun-if-env-changed={}", name);
         if let Ok(path) = env::var(name) {

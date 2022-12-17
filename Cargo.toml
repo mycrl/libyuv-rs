@@ -21,6 +21,3 @@ categories = [
 
 [dependencies]
 libc = "0.2.121"
-
-[build-dependencies]
-dotenv = "0.15.0"
