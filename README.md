@@ -8,7 +8,7 @@ Raw FFI bindings to libyuv libraries.
 Add the following to your Cargo.toml:
 
 ```toml
-libyuv = "0.1.0"
+libyuv = "0.1"
 ```
 
 ### Building
