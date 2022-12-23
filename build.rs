@@ -10,12 +10,10 @@ fn split(path: &Path) -> (String, String) {
     let name = path.file_stem().unwrap().to_str().unwrap().to_string();
     let dir = path.parent().unwrap().to_str().unwrap().to_string();
 
-    (
-        dir,
-        name.starts_with("lib")
-            .then(|| name.replacen("lib", "", 1))
-            .unwrap_or(name),
-    )
+    (dir,
+     name.starts_with("lib")
+         .then(|| name.replacen("lib", "", 1))
+         .unwrap_or(name))
 }
 
 fn get_lib_name(key: &str, long: bool) -> String {
@@ -40,19 +38,18 @@ fn download(name: &str) -> (String, String) {
     let lib_name = get_lib_name(name, true);
     let path = join(&output, &lib_name);
     if !path.exists() {
-        Command::new("curl")
-            .arg("-f")
-            .arg("-L")
-            .arg("-o")
-            .arg(path.to_str().unwrap())
-            .arg(&format!(
-                "{}/releases/download/v{}/{}",
-                repository, version, lib_name
-            ))
-            .output()
-            .expect("There is no precompiled binary library file in git \
+        Command::new("curl").arg("-f")
+                            .arg("-L")
+                            .arg("-o")
+                            .arg(path.to_str().unwrap())
+                            .arg(&format!("{}/releases/download/v{}/{}",
+                                          repository, version, lib_name))
+                            .output()
+                            .expect(
+                                    "There is no precompiled binary library file in git \
                 releases, please try to compile it yourself according to the \
-                README, see https://github.com/colourful-rtc/libyuv-rs");
+                README, see https://github.com/colourful-rtc/libyuv-rs",
+        );
     }
 
     split(&path)
@@ -65,11 +62,11 @@ fn main() {
             println!("cargo:rerun-if-changed={}", path);
         }
     }
-    
-    let (yuv_lib_path, yuv_lib_name) = env::var("YUV_LIBRARY_PATH")
-        .map(|path| split(Path::new(&path)))
-        .unwrap_or_else(|_| download("yuv"));
-    
+
+    let (yuv_lib_path, yuv_lib_name) =
+        env::var("YUV_LIBRARY_PATH").map(|path| split(Path::new(&path)))
+                                    .unwrap_or_else(|_| download("yuv"));
+
     println!("cargo:rustc-link-lib={}", yuv_lib_name);
     println!("cargo:rustc-link-search=all={}", yuv_lib_path);
 }
