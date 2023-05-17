@@ -241,4 +241,4 @@ ninja -v -C out/Release
 
 
 ### License
-[GPL](./LICENSE) Copyright (c) 2022 Mr.Panda.
+[MIT](./LICENSE) Copyright (c) 2022 Mr.Panda.
