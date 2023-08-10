@@ -1,4 +1,5 @@
 use std::env;
+use std::io::Error;
 use std::path::*;
 use std::process::*;
 
@@ -32,19 +33,17 @@ fn get_lib_name(key: &str, long: bool) -> String {
 
 #[cfg(target_os = "windows")]
 fn exec(cmd: &str, work_dir: &str) -> Result<ExitStatus, Error> {
-    Command::new(*PWSH_EXECUTABLE)
-        .args(["-command", cmd])
-        .current_dir(work_dir)
-        .status()
+    Command::new("powershell").args(["-command", cmd])
+                              .current_dir(work_dir)
+                              .status()
 }
 
 #[cfg(target_os = "linux")]
 fn exec(command: &str, work_dir: &str) -> Result<ExitStatus, Error> {
-    let output = Command::new("bash")
-        .arg("-c")
-        .arg(command)
-        .current_dir(work_dir)
-        .status()
+    Command::new("bash").arg("-c")
+                        .arg(command)
+                        .current_dir(work_dir)
+                        .status()
 }
 
 fn download(name: &str) -> (String, String) {
@@ -57,13 +56,16 @@ fn download(name: &str) -> (String, String) {
     if !path.exists() {
         let url = &format!("{}/releases/download/v{}/{}", repository, version, lib_name);
         if cfg!(windows) {
-            exec(&format!("Invoke-WebRequest -Uri {} -OutFile {}", url, path.to_str().unwrap()), output)
+            exec(&format!("Invoke-WebRequest -Uri {} -OutFile {}",
+                          url,
+                          path.to_str().unwrap()),
+                 &output)
         } else {
-            exec(&format!("curl -f -L -o {} {}", path.to_str().unwrap(), url), output)
+            exec(&format!("curl -f -L -o {} {}", path.to_str().unwrap(), url),
+                 &output)
         }.expect("There is no precompiled binary library file in git \
                 releases, please try to compile it yourself according to the \
-                README, see https://github.com/colourful-rtc/libyuv-rs",
-        );                
+                README, see https://github.com/colourful-rtc/libyuv-rs");
     }
 
     split(&path)
