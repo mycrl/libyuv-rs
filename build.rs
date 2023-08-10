@@ -55,14 +55,12 @@ fn download(name: &str) -> (String, String) {
     let path = join(&output, &lib_name);
     if !path.exists() {
         let url = &format!("{}/releases/download/v{}/{}", repository, version, lib_name);
+        let path = path.to_str().unwrap();
         if cfg!(windows) {
-            exec(&format!("Invoke-WebRequest -Uri {} -OutFile {}",
-                          url,
-                          path.to_str().unwrap()),
+            exec(&format!("Invoke-WebRequest -Uri {} -OutFile {}", url, path),
                  &output)
         } else {
-            exec(&format!("curl -f -L -o {} {}", path.to_str().unwrap(), url),
-                 &output)
+            exec(&format!("curl -f -L -o {} {}", path, url), &output)
         }.expect("There is no precompiled binary library file in git \
                 releases, please try to compile it yourself according to the \
                 README, see https://github.com/colourful-rtc/libyuv-rs");
