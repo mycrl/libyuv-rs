@@ -38,7 +38,7 @@ fn exec(cmd: &str, work_dir: &str) -> Result<ExitStatus, Error> {
                               .status()
 }
 
-#[cfg(target_os = "linux")]
+#[cfg(not(target_os = "windows"))]
 fn exec(command: &str, work_dir: &str) -> Result<ExitStatus, Error> {
     Command::new("bash").arg("-c")
                         .arg(command)
