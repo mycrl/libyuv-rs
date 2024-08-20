@@ -1,4 +1,4 @@
-use libc::*;
+use std::ffi::*;
 
 #[repr(i32)]
 pub enum FilterMode {
