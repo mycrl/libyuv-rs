@@ -50,11 +50,11 @@ jobs:
 
       - name: Rename library (Linux)
         if: runner.os == 'Linux'
-        run: cp ./Release/yuv.a ./libyuv-linux-${{ matrix.arch }}.a
+        run: cp ./Release/libyuv.a ./libyuv-linux-${{ matrix.arch }}.a
 
       - name: Rename library (Macos)
         if: runner.os == 'Macos'
-        run: cp ./Release/yuv.a ./libyuv-macos-${{ matrix.arch }}.a
+        run: cp ./Release/libyuv.a ./libyuv-macos-${{ matrix.arch }}.a
 
       - name: Upload artifact (Linux)
         if: runner.os == 'Linux'
