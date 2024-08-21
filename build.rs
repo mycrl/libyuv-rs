@@ -65,7 +65,7 @@ fn main() -> anyhow::Result<()> {
     if !is_exsit(&join(&output, &library_name(true))?) {
         let url = format!("{}/releases/download/v{}/{}", repository, version, library_name(true));
         if cfg!(target_os = "windows") {
-            exec(&format!("Invoke-WebRequest -Uri {}", url),
+            exec(&format!("Invoke-WebRequest -Uri {} -OutFile {}", url, library_name(true)),
                  &output)
         } else {
             exec(&format!("wget {}", url), &output)
