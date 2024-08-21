@@ -1,68 +1,70 @@
 name: publish release
 on:
-    push:
-        tags:
-            - 'v*'
+  push:
+    tags:
+      - "v*"
 jobs:
-    build:
-        runs-on: '${{ matrix.os }}'
-        strategy:
-            matrix:
-                os:
-                    - ubuntu-latest
-                    - windows-latest
-                    - macos-latest
-                arch:
-                    - x86_64
-                    - aarch64
-                exclude:
-                    - os: windows-latest
-                      arch: aarch64
-                    - os: macos-latest
-                      arch: x86_64
-        steps:
-            - name: Build
-              run: |
-                  git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
-                  ./depot_tools/gclient config --name src https://chromium.googlesource.com/libyuv/libyuv
-                  ./depot_tools/gclient sync
-                  cd src
-                  cmake -DCMAKE_BUILD_TYPE="Release" .
-                  cmake --build . --config Release
-            - name: Rename library (Windows)
-              if: runner.os == 'Windows'
-              run: cp ./Release/yuv.lib yuv-${{ matrix.os }}-${{ matrix.arch }}.lib
-            - name: Rename library (Unix)
-              if: runner.os != 'Windows'
-              run: cp ./yuv.lib libyuv-${{ matrix.os }}-${{ matrix.arch }}.a
-            - name: Upload artifact (Unix)
-              if: runner.os != 'Windows'
-              uses: actions/upload-artifact@v3
-              with:
-                  name: ${{ matrix.os }}-${{ matrix.arch }}
-                  path: ./libyuv-${{ matrix.os }}-${{ matrix.arch }}.a
-            - name: Upload artifact (Windows)
-              if: runner.os == 'Windows'
-              uses: actions/upload-artifact@v3
-              with:
-                  name: ${{ matrix.os }}-${{ matrix.arch }}
-                  path: ./yuv-${{ matrix.os }}-${{ matrix.arch }}.lib
-    deploy:
-        needs: build
-        runs-on: ubuntu-latest
-        steps:
-          - name: Download All Artifacts
-            uses: actions/download-artifact@v3
-            with:
-                path: artifacts
-          - name: Create release
-            id: create_release
-            uses: softprops/action-gh-release@v1
-            env:
-                GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-            with:
-                tag_name: ${{ github.ref_name }}
-                name: ${{ github.ref_name }}
-                draft: false
-                prerelease: false
-                files: artifacts/**/*
+  build:
+    runs-on: "${{ matrix.os }}"
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+        arch:
+          - x86_64
+          - aarch64
+        exclude:
+          - os: windows-latest
+            arch: aarch64
+          - os: macos-latest
+            arch: x86_64
+    steps:
+      - name: Build
+        env:
+          DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+        run: |
+          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+          ./depot_tools/gclient config --name src https://chromium.googlesource.com/libyuv/libyuv
+          ./depot_tools/gclient sync
+          cd src
+          cmake -DCMAKE_BUILD_TYPE="Release" .
+          cmake --build . --config Release
+      - name: Rename library (Windows)
+        if: runner.os == 'Windows'
+        run: cp ./Release/yuv.lib yuv-${{ matrix.os }}-${{ matrix.arch }}.lib
+      - name: Rename library (Unix)
+        if: runner.os != 'Windows'
+        run: cp ./yuv.lib libyuv-${{ matrix.os }}-${{ matrix.arch }}.a
+      - name: Upload artifact (Unix)
+        if: runner.os != 'Windows'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.os }}-${{ matrix.arch }}
+          path: ./libyuv-${{ matrix.os }}-${{ matrix.arch }}.a
+      - name: Upload artifact (Windows)
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.os }}-${{ matrix.arch }}
+          path: ./yuv-${{ matrix.os }}-${{ matrix.arch }}.lib
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+      - name: Create release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          files: artifacts/**/*
