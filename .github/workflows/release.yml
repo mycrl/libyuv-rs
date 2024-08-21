@@ -31,6 +31,7 @@ jobs:
           cd src
           cmake -DCMAKE_BUILD_TYPE="Release" .
           cmake --build . --config Release
+          ls
 
       - name: Build (Windows)
         if: runner.os == 'Windows'
