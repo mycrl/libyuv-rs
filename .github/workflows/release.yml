@@ -47,22 +47,22 @@ jobs:
               with:
                   name: ${{ matrix.os }}-${{ matrix.arch }}
                   path: ./yuv-${{ matrix.os }}-${{ matrix.arch }}.lib
-  deploy:
-      needs: build
-      runs-on: ubuntu-latest
-      steps:
-        - name: Download All Artifacts
-          uses: actions/download-artifact@v3
-          with:
-              path: artifacts
-        - name: Create release
-          id: create_release
-          uses: softprops/action-gh-release@v1
-          env:
-              GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-          with:
-              tag_name: ${{ github.ref_name }}
-              name: ${{ github.ref_name }}
-              draft: false
-              prerelease: false
-              files: artifacts/**/*
+    deploy:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+          - name: Download All Artifacts
+            uses: actions/download-artifact@v3
+            with:
+                path: artifacts
+          - name: Create release
+            id: create_release
+            uses: softprops/action-gh-release@v1
+            env:
+                GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+            with:
+                tag_name: ${{ github.ref_name }}
+                name: ${{ github.ref_name }}
+                draft: false
+                prerelease: false
+                files: artifacts/**/*
