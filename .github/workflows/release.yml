@@ -26,7 +26,7 @@ jobs:
             -
                 name: Setup (Macos)
                 if: runner.os == 'Macos'
-                run: pip install --force-reinstall -U setuptools
+                run: brew install setuptools
             -
                 name: Build (Unix)
                 if: runner.os != 'Windows'
