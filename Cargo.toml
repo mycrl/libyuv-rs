@@ -1,6 +1,6 @@
 [package]
 name = "libyuv"
-version = "0.1.4"
+version = "1.0.0"
 edition = "2021"
 authors = [ "Mr.Panda <xivistudios@gmail.com>" ]
 description = "Raw FFI bindings to libyuv libraries."
