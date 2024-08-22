@@ -15,7 +15,7 @@ Add the following to your Cargo.toml:
 
 ```toml
 [dependencies]
-libyuv = "0.1"
+libyuv = "1"
 ```
 
 Convert ARGB to NV12:
