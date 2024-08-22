@@ -9,19 +9,19 @@ jobs:
         strategy:
             matrix:
                 os:
-                    # - ubuntu-latest
-                    # - windows-latest
+                    - ubuntu-latest
+                    - windows-latest
                     - macos-latest
                 arch:
-                    # - x86_64
+                    - x86_64
                     - aarch64
-                # exclude:
-                #     -
-                #         os: windows-latest
-                #         arch: aarch64
-                #     -
-                #         os: macos-latest
-                #         arch: x86_64
+                exclude:
+                    -
+                        os: windows-latest
+                        arch: aarch64
+                    -
+                        os: macos-latest
+                        arch: x86_64
         steps:
             -
                 name: Setup (Macos)
