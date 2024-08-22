@@ -26,9 +26,7 @@ jobs:
             -
                 name: Setup (Macos)
                 if: runner.os == 'Macos'
-                run: |
-                  brew install pipx
-                  pipx install setuptools
+                run: pip install --force-reinstall -U setuptools
             -
                 name: Build (Unix)
                 if: runner.os != 'Windows'
