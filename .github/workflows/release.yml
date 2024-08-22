@@ -21,23 +21,22 @@ jobs:
           - os: macos-latest
             arch: x86_64
     steps:
-      - name: Build (Unix)
-        if: runner.os != 'Windows'
-        run: |
-          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
-          export PATH=$PATH:$(pwd)/depot_tools
-          gclient config --name src https://chromium.googlesource.com/libyuv/libyuv
-          gclient sync
-          cd src
-          cmake -DCMAKE_BUILD_TYPE="Release" .
-          cmake --build . --config Release
+      - name: Setup (Macos)
+        if: runner.os == 'Macos'
+        run: pip install setuptools
 
-      - name: Build (Windows)
+      - name: Set env (Windows)
         if: runner.os == 'Windows'
         run: |
-          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
           $env:PATH += ";$(Get-Location)\depot_tools"
           $env:DEPOT_TOOLS_WIN_TOOLCHAIN=0
+      - name: Set env (Unix)
+        if: runner.os != 'Windows'
+        run: export PATH=$PATH:$(pwd)/depot_tools
+
+      - name: Build
+        run: |
+          git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
           gclient config --name src https://chromium.googlesource.com/libyuv/libyuv
           gclient sync
           cd src
@@ -58,30 +57,33 @@ jobs:
 
       - name: Upload artifact (Linux)
         if: runner.os == 'Linux'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: linux-${{ matrix.arch }}
           path: ./libyuv-linux-${{ matrix.arch }}.a
+          retention-days: 1
 
       - name: Upload artifact (Macos)
         if: runner.os == 'Macos'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: macos-${{ matrix.arch }}
           path: ./libyuv-macos-${{ matrix.arch }}.a
+          retention-days: 1
 
       - name: Upload artifact (Windows)
         if: runner.os == 'Windows'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: windows-${{ matrix.arch }}
           path: ./yuv-windows-${{ matrix.arch }}.lib
+          retention-days: 1
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Download All Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
       - name: Create release
