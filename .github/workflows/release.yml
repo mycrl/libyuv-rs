@@ -26,7 +26,7 @@ jobs:
             -
                 name: Setup (Macos)
                 if: runner.os == 'Macos'
-                run: pip3 install setuptools
+                run: python3 -m pip install setuptools
             -
                 name: Build (Unix)
                 if: runner.os != 'Windows'
