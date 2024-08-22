@@ -33,8 +33,7 @@ jobs:
                 run: |
                     git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
                     export PATH=$PATH:$(pwd)/depot_tools
-                    gclient config --name src
-                    https://chromium.googlesource.com/libyuv/libyuv
+                    gclient config --name src https://chromium.googlesource.com/libyuv/libyuv
                     gclient sync
                     cd src
                     cmake -DCMAKE_BUILD_TYPE="Release" .
@@ -46,8 +45,7 @@ jobs:
                     git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
                     $env:PATH += ";$(Get-Location)\depot_tools"
                     $env:DEPOT_TOOLS_WIN_TOOLCHAIN=0
-                    gclient config --name src
-                    https://chromium.googlesource.com/libyuv/libyuv
+                    gclient config --name src https://chromium.googlesource.com/libyuv/libyuv
                     gclient sync
                     cd src
                     cmake -DCMAKE_BUILD_TYPE="Release" .
