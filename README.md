@@ -17,16 +17,18 @@ Convert ARGB to NV12:
 let argb = vec![0u8; 1280 * 720 * 4];
 let mut nv12 = vec![0u8; 1280 * 720 * 1.5];
 
-let ret = libyuv::argb_to_nv12(
-    argb.as_ptr(),
-    1280 * 4,
-    nv12.as_mut_ptr(),
-    1280,
-    nv12.as_mut_ptr().add(1280 * 720),
-    1280,
-    1280,
-    720,
-);
+let ret = unsafe {
+    libyuv::argb_to_nv12(
+        argb.as_ptr(),
+        1280 * 4,
+        nv12.as_mut_ptr(),
+        1280,
+        nv12.as_mut_ptr().add(1280 * 720),
+        1280,
+        1280,
+        720,
+    )
+};
 
 assert_eq!(ret, 0);
 ```
