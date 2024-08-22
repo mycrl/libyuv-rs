@@ -14,6 +14,7 @@ Raw FFI bindings to libyuv libraries，This is an unsafe package.
 Add the following to your Cargo.toml:
 
 ```toml
+[dependencies]
 libyuv = "0.1"
 ```
 
