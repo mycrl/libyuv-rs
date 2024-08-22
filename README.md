@@ -2,6 +2,12 @@
 
 Raw FFI bindings to libyuv libraries，This is an unsafe package.
 
+### Supported platforms
+
+| arch/os | linux | windows | macos |
+|---------|-------|---------|-------|
+| arm64   | ✅     | ❌       | ✅     |
+| amd64   | ✅     | ✅       | ❌     |
 
 ### Quick start
 
