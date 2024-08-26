@@ -10,18 +10,9 @@ jobs:
             matrix:
                 os:
                     - ubuntu-latest
+                    - ubuntu-arm64-latest
                     - windows-latest
                     - macos-latest
-                arch:
-                    - x86_64
-                    - aarch64
-                exclude:
-                    -
-                        os: windows-latest
-                        arch: aarch64
-                    -
-                        os: macos-latest
-                        arch: x86_64
         steps:
             -
                 name: Setup (Macos)
@@ -56,19 +47,31 @@ jobs:
                 run: cp ./src/Release/yuv.lib ./yuv-windows-${{ matrix.arch }}.lib
             -
                 name: Rename library (Linux)
-                if: runner.os == 'Linux'
-                run: cp ./src/libyuv.a ./libyuv-linux-${{ matrix.arch }}.a
+                if: matrix.os == 'ubuntu-latest'
+                run: cp ./src/libyuv.a ./libyuv-linux-x86_64.a
+            -
+                name: Rename library (Linux)
+                if: matrix.os == 'ubuntu-arm64-latest'
+                run: cp ./src/libyuv.a ./libyuv-linux-aarch64.a
             -
                 name: Rename library (Macos)
                 if: runner.os == 'Macos'
                 run: cp ./src/libyuv.a ./libyuv-macos-${{ matrix.arch }}.a
             -
                 name: Upload artifact (Linux)
-                if: runner.os == 'Linux'
+                if: matrix.os == 'ubuntu-latest'
                 uses: actions/upload-artifact@v4
                 with:
-                    name: 'linux-${{ matrix.arch }}'
-                    path: './libyuv-linux-${{ matrix.arch }}.a'
+                    name: 'linux-x86_64'
+                    path: './libyuv-linux-x86_64.a'
+                    retention-days: 1
+            -
+                name: Upload artifact (Linux)
+                if: matrix.os == 'ubuntu-arm64-latest'
+                uses: actions/upload-artifact@v4
+                with:
+                    name: 'linux-aarch64'
+                    path: './libyuv-linux-aarch64.a'
                     retention-days: 1
             -
                 name: Upload artifact (Macos)
