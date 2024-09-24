@@ -21,3 +21,4 @@ categories = [
 
 [build-dependencies]
 anyhow = "1.0.80"
+which = "6.0.3"
